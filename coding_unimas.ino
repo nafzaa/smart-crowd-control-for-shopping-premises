@@ -31,7 +31,7 @@ void setup() {
   pinMode(echoPin, INPUT);
   pinMode(buzz, OUTPUT);
   pinMode(irsensor, INPUT);
-  Timer1.initialize(10000);
+  Timer1.initialize(100);
   Timer1.attachInterrupt(runirsensor);
   Serial.begin(9600); 
   lcd.setCursor(4,0);
@@ -40,6 +40,19 @@ void setup() {
   lcd.print("count =");
 }
 void loop() {
+  //irsensor
+  if (valueirsensor == LOW && state2 == false ){  //pnp
+    count = count - 1;
+    lcd.setCursor(8,1);
+    lcd.print("  ");
+    lcd.setCursor(8,1);
+    lcd.print(count);
+    state2 = true;
+    }
+
+  if (valueirsensor == HIGH){
+    state2 = false;
+    }
   
   //ultrasonic
   digitalWrite(trigPin, LOW);
@@ -54,7 +67,9 @@ void loop() {
     count = 0;
     }
 
-  if (distance <= 40 && state1 == false){
+
+
+  if (distance <= 40 && distance > 0 && state1 == false){
     count++;
     lcd.setCursor(8,1);
     lcd.print("  ");
@@ -70,12 +85,14 @@ void loop() {
 
   if (count >= 11){
     digitalWrite(buzz, HIGH);
+    Serial.println("buzz on");
     delay(3000);
     count = 10;
     }
 
   else{
     digitalWrite(buzz, LOW);
+    //Serial.println("buzz off");
     }
 
  
@@ -92,16 +109,4 @@ void runirsensor(){
   //irsensor
   valueirsensor = digitalRead(irsensor);
 
-  if (valueirsensor == LOW && state2 == false ){  //pnp
-    count = count - 1;
-    lcd.setCursor(8,1);
-    lcd.print("  ");
-    lcd.setCursor(8,1);
-    lcd.print(count);
-    state2 = true;
-    }
-
-  if (valueirsensor == HIGH){
-    state2 = false;
-    }
   }
