@@ -24,6 +24,8 @@ int count = 0;
 bool state1 = false;
 bool state2 = false;
 
+int state3 = 0;
+
 void setup() {
   lcd.init();
   lcd.backlight();
@@ -41,7 +43,7 @@ void setup() {
 }
 void loop() {
   //irsensor
-  if (valueirsensor == LOW && state2 == false ){  //pnp
+  if (state3 == 1 && state2 == false ){  //pnp
     count = count - 1;
     lcd.setCursor(8,1);
     lcd.print("  ");
@@ -52,6 +54,7 @@ void loop() {
 
   if (valueirsensor == HIGH){
     state2 = false;
+    state3 = 0;
     }
   
   //ultrasonic
@@ -98,7 +101,7 @@ void loop() {
  
   Serial.print("Distance: ");
   Serial.print(distance);
-  Serial.print(" cm");
+  Serial.print(" cm ");
   Serial.print("count: ");
   Serial.println(count);
   
@@ -108,5 +111,9 @@ void loop() {
 void runirsensor(){
   //irsensor
   valueirsensor = digitalRead(irsensor);
+
+  if(valueirsensor == LOW){
+    state3 = 1;
+    }
 
   }
