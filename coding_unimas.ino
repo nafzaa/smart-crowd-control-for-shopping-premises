@@ -2,7 +2,6 @@
 #include <LiquidCrystal_I2C.h>
 #include <TimerOne.h>
 
-
 LiquidCrystal_I2C lcd(0x27,16,2);
 
 // ultrasonic sensor
@@ -20,6 +19,7 @@ long duration;
 int distance;
 
 int count = 0;
+int total = 10;
 
 bool state1 = false;
 bool state2 = false;
@@ -36,19 +36,31 @@ void setup() {
   Timer1.initialize(100);
   Timer1.attachInterrupt(runirsensor);
   Serial.begin(9600); 
-  lcd.setCursor(4,0);
-  lcd.print("welcome");
-  lcd.setCursor(0,1);
-  lcd.print("count =");
+  lcd.setCursor(2,1);
+  lcd.print("AVAILABLE=");
+  
 }
 void loop() {
   //irsensor
   if (state3 == 1 && state2 == false ){  //pnp
     count = count - 1;
-    lcd.setCursor(8,1);
+    total = total - count;
+    if (total <= 9){
+      lcd.setCursor(2,0);
+      lcd.print("           ");
+      lcd.setCursor(4,0);
+      lcd.print("WELCOME");
+      }
+    else {
+      lcd.setCursor(4,0);
+      lcd.print("       ");
+      lcd.setCursor(2,0);
+      lcd.print("PLEASE WAIT");
+      }
+    lcd.setCursor(12,1);
     lcd.print("  ");
-    lcd.setCursor(8,1);
-    lcd.print(count);
+    lcd.setCursor(12,1);
+    lcd.print(total);
     state2 = true;
     }
 
@@ -74,10 +86,23 @@ void loop() {
 
   if (distance <= 40 && distance > 0 && state1 == false){
     count++;
-    lcd.setCursor(8,1);
+    total = total - count;
+    if (total <= 9){
+      lcd.setCursor(2,0);
+      lcd.print("           ");
+      lcd.setCursor(4,0);
+      lcd.print("WELCOME");
+      }
+    else {
+      lcd.setCursor(4,0);
+      lcd.print("       ");
+      lcd.setCursor(2,0);
+      lcd.print("PLEASE WAIT");
+      }
+    lcd.setCursor(12,1);
     lcd.print("  ");
-    lcd.setCursor(8,1);
-    lcd.print(count);
+    lcd.setCursor(12,1);
+    lcd.print(total);
     state1 = true;
     }
 
@@ -106,6 +131,7 @@ void loop() {
   Serial.println(count);
   
 }
+
 
 
 void runirsensor(){
