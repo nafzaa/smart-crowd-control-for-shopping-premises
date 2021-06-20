@@ -45,7 +45,7 @@ void loop() {
   if (state3 == 1 && state2 == false ){  //pnp
     count = count - 1;
     total = total - count;
-    if (total <= 9){
+    if (total >= 1){
       lcd.setCursor(2,0);
       lcd.print("           ");
       lcd.setCursor(4,0);
@@ -87,7 +87,7 @@ void loop() {
   if (distance <= 40 && distance > 0 && state1 == false){
     count++;
     total = total - count;
-    if (total <= 9){
+    if (total >= 1){
       lcd.setCursor(2,0);
       lcd.print("           ");
       lcd.setCursor(4,0);
